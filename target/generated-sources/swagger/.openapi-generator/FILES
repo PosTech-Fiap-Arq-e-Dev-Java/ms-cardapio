@@ -1,0 +1,9 @@
+README.md
+pom.xml
+src/main/java/com/fiap/ms/cardapioDomain/ApiUtil.java
+src/main/java/com/fiap/ms/cardapioDomain/DefaultApi.java
+src/main/java/com/fiap/ms/cardapioDomain/gen/model/AtualizarItemCardapioRequestDto.java
+src/main/java/com/fiap/ms/cardapioDomain/gen/model/ItemCardapioDto.java
+src/main/java/com/fiap/ms/cardapioDomain/gen/model/MsCardapioV1ItensUsuarioTagsPostRequestDto.java
+src/main/java/com/fiap/ms/cardapioDomain/gen/model/NovoItemCardapioDto.java
+src/main/java/com/fiap/ms/cardapioDomain/gen/model/TagsCardapioDto.java

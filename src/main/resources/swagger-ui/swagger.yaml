@@ -1,0 +1,247 @@
+openapi: 3.0.3
+info:
+  title: API de Cardápio
+  version: 1.0.0
+  description: API para gerenciamento de itens de cardápio por usuário.
+
+paths:
+  /ms-cardapio/v1/itens/{usuario}:
+    get:
+      summary: Lista todos os itens do usuário ou busca um item específico pelo idItemCardapio e/ou tags
+      parameters:
+        - name: usuario
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Identificador do usuário dono do cardápio
+        - name: idItemCardapio
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: ID do item para filtrar (opcional)
+      responses:
+        '200':
+          description: Lista de itens ou item específico
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemCardapio'
+        '404':
+          description: Item não encontrado
+
+    put:
+      summary: Atualiza um item do cardápio pelo usuário e id do item
+      parameters:
+        - name: usuario
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: idItemCardapio
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: ID do item a ser atualizado
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AtualizarItemCardapioRequest'
+      responses:
+        '200':
+          description: Item atualizado com sucesso
+        '404':
+          description: Item não encontrado
+
+    delete:
+      summary: Deleta um item do cardápio pelo usuário e id do item. Opcionalmente, deleta por tag.
+      description: |
+        Deleta um item específico usando `idItemCardapio`. Opcionalmente, se `codigoTag` for informado, deleta todos os itens do usuário com essa tag.
+        O parâmetro `idItemCardapio` é obrigatório.
+      parameters:
+        - name: usuario
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Identificador do usuário dono do cardápio
+        - name: idItemCardapio
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: ID do item a ser deletado
+        - name: codigoTags
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Codigo da tag para deletar todos os itens do usuário com essa tag
+      responses:
+        '204':
+          description: Item(ns) deletado(s) com sucesso
+        '400':
+          description: Requisição inválida
+        '404':
+          description: Item ou tag não encontrado
+
+  /ms-cardapio/v1/itens:
+    post:
+      summary: Cria um item de cardápio para um usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovoItemCardapio'
+      responses:
+        '201':
+          description: Item criado com sucesso
+
+  /ms-cardapio/v1/tags:
+    get:
+      summary: Lista todas as tags de itens do cardápio
+      responses:
+        '200':
+          description: Lista de tags disponíveis
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TagsCardapio'
+
+  /ms-cardapio/v1/itens/{usuario}/tags:
+    post:
+      summary: Adiciona uma tag a um item do cardápio
+      parameters:
+        - name: usuario
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Identificador do usuário dono do cardápio
+        - name: idItemCardapio
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: ID do item ao qual será adicionada a tag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - codigoTags
+              properties:
+                codigoTags:
+                  type: string
+                  description: Codigo da tag a ser adicionada
+      responses:
+        '200':
+          description: Tag adicionada com sucesso
+        '400':
+          description: Requisição inválida
+        '404':
+          description: Item ou tag não encontrado
+
+components:
+  schemas:
+    ItemCardapio:
+      type: object
+      required:
+        - idItemCardapio
+        - usuario
+        - nome
+        - preco
+        - disponivelLocal
+        - codigoTags
+      properties:
+        idItemCardapio:
+          type: integer
+        usuario:
+          type: string
+        nome:
+          type: string
+        descricao:
+          type: string
+        preco:
+          type: number
+          format: float
+        disponivelLocal:
+          type: boolean
+        fotoPath:
+          type: string
+        codigoTags:
+          type: array
+          maxItems: 5
+          items:
+            type: string
+          description: Lista de IDs das tags (máximo 5)
+
+    NovoItemCardapio:
+      type: object
+      required:
+        - usuario
+        - nome
+        - preco
+        - codigoTags
+        - disponivelLocal
+      properties:
+        usuario:
+          type: string
+        nome:
+          type: string
+        codigoTags:
+          type: array
+          maxItems: 5
+          items:
+            type: string
+        descricao:
+          type: string
+        preco:
+          type: number
+          format: float
+        disponivelLocal:
+          type: boolean
+        fotoPath:
+          type: string
+
+    AtualizarItemCardapioRequest:
+      type: object
+      properties:
+        nome:
+          type: string
+        codigoTags:
+          type: array
+          maxItems: 5
+          items:
+            type: string
+        descricao:
+          type: string
+        preco:
+          type: number
+          format: float
+        disponivelLocal:
+          type: boolean
+        fotoPath:
+          type: string
+
+    TagsCardapio:
+      type: object
+      required:
+        - codigoTags
+        - nome
+      properties:
+        codigoTags:
+          type: string
+        nome:
+          type: string
