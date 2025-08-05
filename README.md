@@ -126,6 +126,19 @@ O microsserviço ms-cardapio interage com as seguintes tabelas no banco de dados
 | `tb_item_cardapio`     | `SELECT`, `INSERT`, `UPDATE`, `DELETE` | Armmazena os items de cardápio.                       |
 | `tb_item_tag_cardapio` | `SELECT`, `INSERT`, `UPDATE`, `DELETE` | Armmazena as tags relacionadas aos itens de cardápios |
 
+
+# 🧪 Carga Inicial de Dados (DataLoader)
+
+A aplicação realiza a carga automática assim que a aplicação é iniciada, dos registros iniciais para as tabelas de domínio:
+
+- tb_tag_cardapio com os valores do codigoTags e nome
+
+Essa carga é realizada através de dois componentes CommandLineRunner:
+
+- TagsCardapioDataLoaderConfig
+
+⚠️ Caso os registros já existam (mesmo ID), a aplicação não os duplica.
+
 ---
 
 ## 🧪 Testes Automatizados com JUnit e Mockito
