@@ -75,6 +75,14 @@ docker-compose up -d
 
 ````
 
+### 6. Suba o container do ms-cardapio
+
+```bash
+docker-compose up --build
+```
+
+---
+
 ## 🔗 Endpoints Disponíveis
 
 | Método   | Caminho                                           | Descrição                                               |
@@ -119,6 +127,18 @@ O microsserviço ms-cardapio interage com as seguintes tabelas no banco de dados
 | `tb_item_tag_cardapio` | `SELECT`, `INSERT`, `UPDATE`, `DELETE` | Armmazena as tags relacionadas aos itens de cardápios |
 
 ---
+
+## 🧪 Testes Automatizados com JUnit e Mockito
+
+Este projeto utiliza testes unitários com JUnit 5 e Mockito para garantir a qualidade e o comportamento esperado dos componentes da aplicação.
+
+## 🔗 Executar Testes
+
+
+```bash
+mvn clean verify
+
+```
 
 ## ‍💻 Autores
 
