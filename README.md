@@ -75,6 +75,14 @@ docker-compose up -d
 
 ````
 
+### 6. Suba o container do ms-cardapio
+
+```bash
+docker-compose up --build
+```
+
+---
+
 ## 🔗 Endpoints Disponíveis
 
 | Método   | Caminho                                           | Descrição                                               |
