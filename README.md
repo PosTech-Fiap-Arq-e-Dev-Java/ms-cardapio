@@ -120,6 +120,18 @@ O microsserviço ms-cardapio interage com as seguintes tabelas no banco de dados
 
 ---
 
+## 🧪 Testes Automatizados com JUnit e Mockito
+
+Este projeto utiliza testes unitários com JUnit 5 e Mockito para garantir a qualidade e o comportamento esperado dos componentes da aplicação.
+
+## 🔗 Executar Testes
+
+
+```bash
+mvn clean verify
+
+```
+
 ## ‍💻 Autores
 
 Este projeto faz parte da Pós-graduação em Arquitetura e Desenvolvimento Java da FIAP e implementa um microsserviço de gestão de cadastros com documentação OpenAPI e persistência de dados em MySQL, seguindo boas práticas de microsserviços.
