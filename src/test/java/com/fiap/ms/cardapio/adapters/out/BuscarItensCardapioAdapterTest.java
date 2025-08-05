@@ -2,11 +2,16 @@ package com.fiap.ms.cardapio.adapters.out;
 
 import com.fiap.ms.cardapio.adapters.out.repository.ItemCardapioRepository;
 import com.fiap.ms.cardapio.adapters.out.repository.entity.ItemCardapioEntity;
+import com.fiap.ms.cardapio.adapters.out.repository.entity.ItemTagCardapioEntity;
+import com.fiap.ms.cardapio.adapters.out.repository.entity.TagsCardapioEntity;
+import com.fiap.ms.cardapio.adapters.out.repository.mapper.ItemCardapioEntityMapper;
 import com.fiap.ms.cardapio.application.core.domain.ItemCardapioDomain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,86 +19,101 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class BuscarItensCardapioAdapterTest {
-/*
+
+    @Mock
     private ItemCardapioRepository itemCardapioRepository;
-    private BuscarItensCardapioAdapter buscarItensCardapioAdapter;
+
+    @Mock
+    private ItemCardapioEntityMapper mapper;
+
+    @InjectMocks
+    private BuscarItensCardapioAdapter adapter;
 
     @BeforeEach
     void setUp() {
-        itemCardapioRepository = mock(ItemCardapioRepository.class);
-        buscarItensCardapioAdapter = new BuscarItensCardapioAdapter(itemCardapioRepository);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void deveBuscarItemPorUsuarioEId_quandoExistir() {
-        // Arrange
-        String usuario = "restaurante123";
+    void buscarPorUsuarioEIdItemCardapio_deveRetornarOptionalComDomain() {
+        String usuario = "usuario1";
         Long id = 1L;
-
         ItemCardapioEntity entity = new ItemCardapioEntity();
-        entity.setIdItemCardapio(id);
-        entity.setUsuario(usuario);
-        entity.setNome("Pizza Margherita");
-        entity.setDescricao("Pizza clássica com molho de tomate e mussarela");
-        entity.setPreco(BigDecimal.valueOf(39.90));
-        entity.setDisponivelLocal(true);
-        entity.setFotoPath("/img/pizza.png");
+        ItemCardapioDomain domain = new ItemCardapioDomain();
+
+        when(itemCardapioRepository.findByUsuarioAndIdItemCardapio(usuario, id)).thenReturn(Optional.of(entity));
+        when(mapper.toDomain(entity)).thenReturn(domain);
+
+        Optional<ItemCardapioDomain> resultado = adapter.buscarPorUsuarioEIdItemCardapio(usuario, id);
+
+        assertTrue(resultado.isPresent());
+        assertEquals(domain, resultado.get());
+    }
+
+    @Test
+    void buscarPorUsuario_deveRetornarListaDeDomains() {
+        String usuario = "usuario1";
+        ItemCardapioEntity entity = new ItemCardapioEntity();
+        ItemCardapioDomain domain = new ItemCardapioDomain();
+
+        when(itemCardapioRepository.findByUsuario(usuario)).thenReturn(List.of(entity));
+        when(mapper.toDomain(entity)).thenReturn(domain);
+
+        List<ItemCardapioDomain> resultado = adapter.buscarPorUsuario(usuario);
+
+        assertEquals(1, resultado.size());
+        assertEquals(domain, resultado.get(0));
+    }
+
+    @Test
+    void buscarEntityPorUsuarioEIdItemCardapio_deveRetornarOptionalEntity() {
+        String usuario = "usuario1";
+        Long id = 1L;
+        ItemCardapioEntity entity = new ItemCardapioEntity();
 
         when(itemCardapioRepository.findByUsuarioAndIdItemCardapio(usuario, id)).thenReturn(Optional.of(entity));
 
-        Optional<ItemCardapioDomain> result = buscarItensCardapioAdapter.buscarPorUsuarioEIdItemCardapio(usuario, id);
+        Optional<ItemCardapioEntity> resultado = adapter.buscarEntityPorUsuarioEIdItemCardapio(usuario, id);
 
-        assertTrue(result.isPresent());
-        assertEquals("Pizza Margherita", result.get().getNome());
-        assertEquals(usuario, result.get().getUsuario());
-        verify(itemCardapioRepository).findByUsuarioAndIdItemCardapio(usuario, id);
+        assertTrue(resultado.isPresent());
+        assertEquals(entity, resultado.get());
     }
 
     @Test
-    void deveRetornarVazio_quandoNaoExistirItemPorUsuarioEId() {
-        String usuario = "naoexiste";
-        Long id = 99L;
+    void verificarTagNoItem_deveRetornarTrue_QuandoTagExiste() {
+        TagsCardapioEntity tag = new TagsCardapioEntity();
+        tag.setCodigo(Integer.valueOf("15"));
 
-        when(itemCardapioRepository.findByUsuarioAndIdItemCardapio(usuario, id)).thenReturn(Optional.empty());
+        ItemTagCardapioEntity tagEntity = new ItemTagCardapioEntity();
+        tagEntity.setCodigoTag(tag);
 
-        Optional<ItemCardapioDomain> result = buscarItensCardapioAdapter.buscarPorUsuarioEIdItemCardapio(usuario, id);
+        ItemCardapioEntity item = new ItemCardapioEntity();
+        item.setCodigoTags(List.of(tagEntity));
 
-        assertFalse(result.isPresent());
-        verify(itemCardapioRepository).findByUsuarioAndIdItemCardapio(usuario, id);
+        boolean resultado = adapter.verificarTagNoItem(item, Integer.valueOf("15"));
+
+        assertTrue(resultado);
+    }
+
+
+    @Test
+    void verificarTagNoItem_deveRetornarFalse_QuandoListaVazia() {
+        ItemCardapioEntity item = new ItemCardapioEntity();
+        item.setCodigoTags(List.of());
+
+        boolean resultado = adapter.verificarTagNoItem(item, 15);
+
+        assertFalse(resultado);
     }
 
     @Test
-    void deveBuscarTodosItensPorUsuario() {
-        String usuario = "restaurante456";
+    void verificarTagNoItem_deveRetornarFalse_QuandoNaoTemCodigoTags() {
+        ItemCardapioEntity item = new ItemCardapioEntity();
+        item.setCodigoTags(null);
 
-        ItemCardapioEntity entity1 = new ItemCardapioEntity();
-        entity1.setIdItemCardapio(1L);
-        entity1.setUsuario(usuario);
-        entity1.setNome("Lasanha");
-        entity1.setDescricao("Lasanha bolonhesa");
-        entity1.setPreco(BigDecimal.valueOf(42.50));
-        entity1.setDisponivelLocal(true);
-        entity1.setFotoPath("/img/lasanha.png");
+        boolean resultado = adapter.verificarTagNoItem(item, 15);
 
-        ItemCardapioEntity entity2 = new ItemCardapioEntity();
-        entity2.setIdItemCardapio(2L);
-        entity2.setUsuario(usuario);
-        entity2.setNome("Salada Caesar");
-        entity2.setDescricao("Salada com frango grelhado e molho caesar");
-        entity2.setPreco(BigDecimal.valueOf(28.90));
-        entity2.setDisponivelLocal(true);
-        entity2.setFotoPath("/img/salada.png");
-
-        when(itemCardapioRepository.findByUsuario(usuario)).thenReturn(List.of(entity1, entity2));
-
-        List<ItemCardapioDomain> result = buscarItensCardapioAdapter.buscarPorUsuario(usuario);
-
-        assertEquals(2, result.size());
-        assertEquals("Lasanha", result.get(0).getNome());
-        assertEquals("Salada Caesar", result.get(1).getNome());
-        verify(itemCardapioRepository).findByUsuario(usuario);
+        assertFalse(resultado);
     }
-
- */
 }
 

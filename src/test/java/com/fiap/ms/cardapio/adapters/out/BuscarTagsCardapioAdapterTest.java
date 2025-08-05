@@ -7,12 +7,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class BuscarTagsCardapioAdapterTest {
-/*
+
     private TagsCardapioRepository repository;
     private BuscarTagsCardapioAdapter adapter;
 
@@ -23,45 +24,44 @@ class BuscarTagsCardapioAdapterTest {
     }
 
     @Test
-    void deveBuscarTodasTags() {
-        // Arrange
-        TagsCardapioEntity tag1 = new TagsCardapioEntity();
-        tag1.setCodigo(Integer.valueOf("TAG001"));
-        tag1.setNome("Bebidas");
+    void buscarTodas_deveRetornarListaDeTags() {
+        TagsCardapioEntity entity = new TagsCardapioEntity();
+        entity.setCodigo(10);
+        entity.setNome("Vegano");
 
-        TagsCardapioEntity tag2 = new TagsCardapioEntity();
-        tag2.setCodigo(Integer.valueOf("TAG002"));
-        tag2.setNome("Sobremesas");
-
-        when(repository.findAll()).thenReturn(List.of(tag1, tag2));
+        when(repository.findAllByOrderByCodigoAsc()).thenReturn(List.of(entity));
 
         List<TagsCardapioDomain> resultado = adapter.buscarTodas();
 
-        assertNotNull(resultado);
-        assertEquals(2, resultado.size());
-
-        TagsCardapioDomain primeiraTag = resultado.get(0);
-        assertEquals("TAG001", primeiraTag.getCodigoTags());
-        assertEquals("Bebidas", primeiraTag.getNome());
-
-        TagsCardapioDomain segundaTag = resultado.get(1);
-        assertEquals("TAG002", segundaTag.getCodigoTags());
-        assertEquals("Sobremesas", segundaTag.getNome());
-
-        verify(repository).findAll();
+        assertEquals(1, resultado.size());
+        assertEquals("Vegano", resultado.get(0).getNome());
+        assertEquals(10, resultado.get(0).getCodigoTags());
+        verify(repository, times(1)).findAllByOrderByCodigoAsc();
     }
 
     @Test
-    void deveRetornarListaVaziaQuandoNaoExistiremTags() {
-        when(repository.findAll()).thenReturn(List.of());
+    void buscarPorCodigo_deveRetornarTagQuandoEncontrada() {
+        TagsCardapioEntity entity = new TagsCardapioEntity();
+        entity.setCodigo(20);
+        entity.setNome("Fitness");
 
-        List<TagsCardapioDomain> resultado = adapter.buscarTodas();
+        when(repository.findByCodigo(20)).thenReturn(Optional.of(entity));
 
-        assertNotNull(resultado);
-        assertTrue(resultado.isEmpty());
+        Optional<TagsCardapioDomain> resultado = adapter.buscarPorCodigo(20);
 
-        verify(repository).findAll();
+        assertTrue(resultado.isPresent());
+        assertEquals("Fitness", resultado.get().getNome());
+        assertEquals(20, resultado.get().getCodigoTags());
+        verify(repository, times(1)).findByCodigo(20);
     }
 
- */
+    @Test
+    void buscarPorCodigo_deveRetornarVazioQuandoNaoEncontrada() {
+        when(repository.findByCodigo(99)).thenReturn(Optional.empty());
+
+        Optional<TagsCardapioDomain> resultado = adapter.buscarPorCodigo(99);
+
+        assertTrue(resultado.isEmpty());
+        verify(repository, times(1)).findByCodigo(99);
+    }
 }

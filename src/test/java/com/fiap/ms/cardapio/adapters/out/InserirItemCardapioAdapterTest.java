@@ -1,36 +1,51 @@
 package com.fiap.ms.cardapio.adapters.out;
 
 import com.fiap.ms.cardapio.adapters.out.repository.ItemCardapioRepository;
+import com.fiap.ms.cardapio.adapters.out.repository.TagsCardapioRepository;
 import com.fiap.ms.cardapio.adapters.out.repository.entity.ItemCardapioEntity;
+import com.fiap.ms.cardapio.adapters.out.repository.entity.TagsCardapioEntity;
+import com.fiap.ms.cardapio.adapters.out.repository.mapper.ItemCardapioEntityMapper;
 import com.fiap.ms.cardapio.application.core.domain.ItemCardapioDomain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-class InserirItemCardapioAdapterTest {
+public class InserirItemCardapioAdapterTest {
 
-    @Mock
     private ItemCardapioRepository itemCardapioRepository;
+    private TagsCardapioRepository tagsCardapioRepository;
+    private ItemCardapioEntityMapper mapper;
 
-    @InjectMocks
     private InserirItemCardapioAdapter adapter;
 
     @BeforeEach
-    void setup() {
-        MockitoAnnotations.openMocks(this);
+    void setUp() {
+        itemCardapioRepository = mock(ItemCardapioRepository.class);
+        tagsCardapioRepository = mock(TagsCardapioRepository.class);
+        mapper = mock(ItemCardapioEntityMapper.class);
+
+        adapter = new InserirItemCardapioAdapter(itemCardapioRepository, tagsCardapioRepository, mapper);
     }
 
     @Test
-    void deveInserirItemCardapioChamandoRepositorio() {
-        ItemCardapioDomain itemDomain = new ItemCardapioDomain();
+    void deveInserirItemComTags() {
+        var domain = new ItemCardapioDomain();
+        domain.setCodigoTags(List.of(1));
 
-        ItemCardapioEntity itemEntity = new ItemCardapioEntity();
+        var entity = new ItemCardapioEntity();
+        entity.setCodigoTags(new java.util.ArrayList<>());
 
-        adapter.inserir(itemDomain);
+        when(mapper.toEntity(domain)).thenReturn(entity);
 
-        verify(itemCardapioRepository, times(1)).save(any(ItemCardapioEntity.class));
+        var tagEntity = new TagsCardapioEntity();
+        when(tagsCardapioRepository.findById(1)).thenReturn(Optional.of(tagEntity));
+        adapter.inserir(domain);
+        verify(itemCardapioRepository, times(1)).save(entity);
     }
 }
+
 

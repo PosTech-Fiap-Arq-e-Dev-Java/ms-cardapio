@@ -1,4 +1,4 @@
-package com.fiap.ms.cardapio.adapters.out.config;
+package com.fiap.ms.cardapio.adapters.config;
 
 import com.fiap.ms.cardapio.adapters.out.repository.TagsCardapioRepository;
 import com.fiap.ms.cardapio.adapters.out.repository.entity.TagsCardapioEntity;

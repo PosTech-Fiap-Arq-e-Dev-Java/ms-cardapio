@@ -1,93 +1,108 @@
 package com.fiap.ms.cardapio.adapters.out;
 
-import com.fiap.ms.cardapio.adapters.out.repository.ItemCardapioRepository;
-import com.fiap.ms.cardapio.adapters.out.repository.ItemTagCardapioRepository;
 import com.fiap.ms.cardapio.adapters.out.repository.entity.ItemCardapioEntity;
 import com.fiap.ms.cardapio.adapters.out.repository.entity.ItemTagCardapioEntity;
+import com.fiap.ms.cardapio.adapters.out.repository.entity.TagsCardapioEntity;
+import com.fiap.ms.cardapio.adapters.out.repository.ItemCardapioRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.*;
 
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class DeletarItemCardapioAdapterTest {
-/*
+
+    @Mock
     private ItemCardapioRepository itemCardapioRepository;
-    private ItemTagCardapioRepository itemTagCardapioRepository;
+
+    @InjectMocks
     private DeletarItemCardapioAdapter adapter;
 
     @BeforeEach
     void setUp() {
-        itemCardapioRepository = mock(ItemCardapioRepository.class);
-        itemTagCardapioRepository = mock(ItemTagCardapioRepository.class);
-        adapter = new DeletarItemCardapioAdapter(itemCardapioRepository, itemTagCardapioRepository);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void deveDeletarItemCardapioQuandoExistir() {
-        String usuario = "restaurante1";
-        Long idItem = 1L;
+    void deletarPorUsuarioEIdItemCardapio_deveDeletarQuandoItemExiste() {
+        String usuario = "usuarioTeste";
+        Long id = 1L;
 
-        ItemCardapioEntity entity = new ItemCardapioEntity();
-        entity.setIdItemCardapio(idItem);
-        entity.setUsuario(usuario);
+        ItemCardapioEntity item = new ItemCardapioEntity();
+        when(itemCardapioRepository.findByUsuarioAndIdItemCardapio(usuario, id)).thenReturn(Optional.of(item));
 
-        when(itemCardapioRepository.findByUsuarioAndIdItemCardapio(usuario, idItem)).thenReturn(Optional.of(entity));
+        adapter.deletarPorUsuarioEIdItemCardapio(usuario, id);
 
-        adapter.deletarPorUsuarioEIdItemCardapio(usuario, idItem);
-
-        verify(itemCardapioRepository).findByUsuarioAndIdItemCardapio(usuario, idItem);
-        verify(itemCardapioRepository).delete(entity);
+        verify(itemCardapioRepository).delete(item);
     }
 
     @Test
-    void naoDeveDeletarItemCardapioQuandoNaoExistir() {
-        String usuario = "restaurante1";
-        Long idItem = 2L;
+    void deletarPorUsuarioEIdItemCardapio_naoDeveDeletarQuandoItemNaoExiste() {
+        String usuario = "usuarioTeste";
+        Long id = 1L;
 
-        when(itemCardapioRepository.findByUsuarioAndIdItemCardapio(usuario, idItem)).thenReturn(Optional.empty());
+        when(itemCardapioRepository.findByUsuarioAndIdItemCardapio(usuario, id)).thenReturn(Optional.empty());
 
-        adapter.deletarPorUsuarioEIdItemCardapio(usuario, idItem);
+        adapter.deletarPorUsuarioEIdItemCardapio(usuario, id);
 
-        verify(itemCardapioRepository).findByUsuarioAndIdItemCardapio(usuario, idItem);
         verify(itemCardapioRepository, never()).delete(any());
     }
 
     @Test
-    void deveDeletarTagPorUsuarioEIdItemCardapioQuandoExistir() {
-        String usuario = "restaurante1";
+    void deletarTagPorUsuarioEIdItemCardapio_deveRemoverTagQuandoExiste() {
+        String usuario = "usuarioTeste";
         Long idItem = 1L;
-        String codigoTag = "TAG001";
+        Integer codigoTag = 15;
+
+        TagsCardapioEntity tag = new TagsCardapioEntity();
+        tag.setCodigo(codigoTag);
 
         ItemTagCardapioEntity tagEntity = new ItemTagCardapioEntity();
+        tagEntity.setCodigoTag(tag);
 
-        when(itemTagCardapioRepository.findByItemCardapio_IdItemCardapioAndCodigoTag_CodigoAndItemCardapio_Usuario(idItem, Integer.valueOf(codigoTag), usuario))
-                .thenReturn(Optional.of(tagEntity));
+        Set<ItemTagCardapioEntity> tags = new HashSet<>();
+        tags.add(tagEntity);
 
-        adapter.deletarTagPorUsuarioEIdItemCardapio(usuario, idItem, Integer.valueOf(codigoTag));
+        ItemCardapioEntity item = new ItemCardapioEntity();
+        item.setCodigoTags(new ArrayList<>(tags));
 
-        verify(itemTagCardapioRepository).findByItemCardapio_IdItemCardapioAndCodigoTag_CodigoAndItemCardapio_Usuario(idItem, Integer.valueOf(codigoTag), usuario);
+        when(itemCardapioRepository.findByUsuarioAndIdItemCardapio(usuario, idItem)).thenReturn(Optional.of(item));
 
-        verify(itemTagCardapioRepository).delete(tagEntity);
+        adapter.deletarTagPorUsuarioEIdItemCardapio(usuario, idItem, codigoTag);
+
+        assertFalse(item.getCodigoTags().contains(tagEntity));
+        verify(itemCardapioRepository).save(item);
+
     }
-
 
     @Test
-    void naoDeveDeletarTagQuandoNaoExistir() {
-        String usuario = "restaurante1";
-        Long idItem = 2L;
-        String codigoTag = "TAG002";
+    void deletarTagPorUsuarioEIdItemCardapio_naoDeveRemoverTagQuandoNaoExiste() {
+        String usuario = "usuarioTeste";
+        Long idItem = 1L;
+        Integer codigoTag = 15;
 
-        when(itemTagCardapioRepository.findByItemCardapio_IdItemCardapioAndCodigoTag_CodigoAndItemCardapio_Usuario(idItem, Integer.valueOf(codigoTag), usuario))
-                .thenReturn(Optional.empty());
+        TagsCardapioEntity tag = new TagsCardapioEntity();
+        tag.setCodigo(99);
 
-        adapter.deletarTagPorUsuarioEIdItemCardapio(usuario, idItem, Integer.valueOf(codigoTag));
+        ItemTagCardapioEntity tagEntity = new ItemTagCardapioEntity();
+        tagEntity.setCodigoTag(tag);
 
-        verify(itemTagCardapioRepository).findByItemCardapio_IdItemCardapioAndCodigoTag_CodigoAndItemCardapio_Usuario(idItem, Integer.valueOf(codigoTag), usuario);
-        verify(itemTagCardapioRepository, never()).delete(any());
+        Set<ItemTagCardapioEntity> tags = new HashSet<>();
+        tags.add(tagEntity);
+
+        ItemCardapioEntity item = new ItemCardapioEntity();
+        item.setCodigoTags(new ArrayList<>(tags));
+
+        when(itemCardapioRepository.findByUsuarioAndIdItemCardapio(usuario, idItem)).thenReturn(Optional.of(item));
+
+        adapter.deletarTagPorUsuarioEIdItemCardapio(usuario, idItem, codigoTag);
+
+        assertEquals(1, item.getCodigoTags().size());
+        verify(itemCardapioRepository, never()).save(any());
     }
-
- */
 }
+
 
