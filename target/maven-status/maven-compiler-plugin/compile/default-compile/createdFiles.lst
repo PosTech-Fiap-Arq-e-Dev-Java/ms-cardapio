@@ -8,7 +8,6 @@ com/fiap/ms/cardapio/application/ports/out/InserirItemCardapioOutputPort.class
 com/fiap/ms/cardapio/adapters/out/BuscarTagsCardapioAdapter.class
 com/fiap/ms/cardapio/application/ports/out/BuscarTagsCardapioOutputPort.class
 com/fiap/ms/cardapio/application/ports/in/InserirItemCardapioInputPort.class
-com/fiap/ms/cardapio/adapters/config/TagsCardapioDataLoaderConfig.class
 com/fiap/ms/cardapio/application/core/domain/exception/CampoObrigatorioException.class
 com/fiap/ms/cardapioDomain/gen/model/ItensUsuarioTagsPostRequestDto.class
 com/fiap/ms/cardapio/adapters/out/repository/entity/ItemTagCardapioEntity.class
@@ -16,6 +15,7 @@ com/fiap/ms/cardapio/application/core/BuscarItensCardapioUseCase.class
 com/fiap/ms/cardapio/application/core/domain/exception/TagNaoEncontradaException.class
 com/fiap/ms/cardapio/application/core/handler/impl/ItemCardapioValidatorHandlerImpl.class
 com/fiap/ms/cardapio/application/ports/in/ListarTagsCardapioInputPort.class
+com/fiap/ms/cardapio/adapters/out/config/TagsCardapioDataLoaderConfig.class
 com/fiap/ms/cardapio/application/core/domain/exception/ItemCardapioNaoEncontradoException.class
 com/fiap/ms/cardapio/adapters/in/controller/mapper/TagsCardapioDtoMapper.class
 com/fiap/ms/cardapio/adapters/in/controller/mapper/ItemCardapioDtoMapper.class

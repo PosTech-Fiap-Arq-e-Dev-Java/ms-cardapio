@@ -34,7 +34,6 @@
 /Users/rayssecutrim/Documents/ProjetosJAVA/ProjetoFIAP/ms-cardapio/src/main/java/com/fiap/ms/cardapio/application/ports/in/InserirItemCardapioInputPort.java
 /Users/rayssecutrim/Documents/ProjetosJAVA/ProjetoFIAP/ms-cardapio/src/main/java/com/fiap/ms/cardapio/application/core/BuscarItensCardapioUseCase.java
 /Users/rayssecutrim/Documents/ProjetosJAVA/ProjetoFIAP/ms-cardapio/src/main/java/com/fiap/ms/cardapio/adapters/out/AtualizarItemCardapioAdapter.java
-/Users/rayssecutrim/Documents/ProjetosJAVA/ProjetoFIAP/ms-cardapio/src/main/java/com/fiap/ms/cardapio/adapters/config/TagsCardapioDataLoaderConfig.java
 /Users/rayssecutrim/Documents/ProjetosJAVA/ProjetoFIAP/ms-cardapio/src/main/java/com/fiap/ms/cardapio/adapters/out/repository/entity/ItemCardapioEntity.java
 /Users/rayssecutrim/Documents/ProjetosJAVA/ProjetoFIAP/ms-cardapio/src/main/java/com/fiap/ms/cardapio/application/core/handler/ItemCardapioValidatorHandler.java
 /Users/rayssecutrim/Documents/ProjetosJAVA/ProjetoFIAP/ms-cardapio/src/main/java/com/fiap/ms/cardapio/adapters/out/repository/TagsCardapioRepository.java
@@ -47,6 +46,7 @@
 /Users/rayssecutrim/Documents/ProjetosJAVA/ProjetoFIAP/ms-cardapio/src/main/java/com/fiap/ms/cardapio/config/usecase/InserirItemCardapioConfig.java
 /Users/rayssecutrim/Documents/ProjetosJAVA/ProjetoFIAP/ms-cardapio/src/main/java/com/fiap/ms/cardapio/adapters/in/controller/handler/GlobalExceptionHandler.java
 /Users/rayssecutrim/Documents/ProjetosJAVA/ProjetoFIAP/ms-cardapio/src/main/java/com/fiap/ms/cardapio/application/core/domain/exception/AtualizarDadosIguaisException.java
+/Users/rayssecutrim/Documents/ProjetosJAVA/ProjetoFIAP/ms-cardapio/src/main/java/com/fiap/ms/cardapio/adapters/out/config/TagsCardapioDataLoaderConfig.java
 /Users/rayssecutrim/Documents/ProjetosJAVA/ProjetoFIAP/ms-cardapio/src/main/java/com/fiap/ms/cardapio/application/ports/in/AtualizarItemCardapioInputPort.java
 /Users/rayssecutrim/Documents/ProjetosJAVA/ProjetoFIAP/ms-cardapio/src/main/java/com/fiap/ms/cardapio/adapters/out/repository/ItemTagCardapioRepository.java
 /Users/rayssecutrim/Documents/ProjetosJAVA/ProjetoFIAP/ms-cardapio/src/main/java/com/fiap/ms/cardapio/adapters/out/InserirTagItemCardapioAdapter.java

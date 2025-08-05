@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-05T17:50:26.073910-03:00[America/Sao_Paulo]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-05T20:22:33.069455-03:00[America/Sao_Paulo]")
 @Validated
 @Tag(name = "Cardapio", description = "Endpoints para gerenciamento de cardapio")
 public interface CardapioApi {
