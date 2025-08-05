@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 @Configuration
@@ -17,14 +19,20 @@ public class TagsCardapioDataLoaderConfig {
     public CommandLineRunner loadTagsCardapio(TagsCardapioRepository repository) {
         return args -> {
             List<TagsCardapioEntity> toSave = new ArrayList<>();
-            for (TagsCardapioEnum tag : TagsCardapioEnum.values()) {
-                if (!repository.existsById(String.valueOf((long) tag.getCodigo()))) {
+
+            TagsCardapioEnum[] sortedTags = TagsCardapioEnum.values();
+            Arrays.sort(sortedTags, Comparator.comparingInt(TagsCardapioEnum::getCodigo));
+
+            for (TagsCardapioEnum tag : sortedTags) {
+                Integer codigoInt = tag.getCodigo();  // agora é Integer
+                if (!repository.existsById(codigoInt)) {
                     TagsCardapioEntity entity = new TagsCardapioEntity();
-                    entity.setCodigo(String.valueOf(tag.getCodigo()));
+                    entity.setCodigo(codigoInt);
                     entity.setNome(tag.getDescricao());
                     toSave.add(entity);
                 }
             }
+
             if (!toSave.isEmpty()) {
                 repository.saveAll(toSave);
                 System.out.println("Tags do cardápio inseridas: " + toSave.size());

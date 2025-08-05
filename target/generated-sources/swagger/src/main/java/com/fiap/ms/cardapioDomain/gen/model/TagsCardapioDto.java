@@ -20,7 +20,7 @@ import jakarta.annotation.Generated;
  */
 
 @JsonTypeName("TagsCardapio")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-03T22:46:04.803020-03:00[America/Sao_Paulo]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-05T11:02:19.156837-03:00[America/Sao_Paulo]")
 public class TagsCardapioDto {
 
   private String codigoTags;
@@ -49,7 +49,7 @@ public class TagsCardapioDto {
    * @return codigoTags
   */
   @NotNull 
-  @Schema(name = "codigoTags", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "codigoTags", example = "01", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("codigoTags")
   public String getCodigoTags() {
     return codigoTags;
@@ -69,7 +69,7 @@ public class TagsCardapioDto {
    * @return nome
   */
   @NotNull 
-  @Schema(name = "nome", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "nome", example = "Sobremesas", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("nome")
   public String getNome() {
     return nome;

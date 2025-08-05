@@ -4,9 +4,15 @@ info:
   version: 1.0.0
   description: API para gerenciamento de itens de cardápio por usuário.
 
+tags:
+  - name: Cardapio
+    description: Endpoints para gerenciamento de cardapio
+
 paths:
-  /ms-cardapio/v1/itens/{usuario}:
+  /itens/{usuario}:
     get:
+      tags:
+        - Cardapio
       summary: Lista todos os itens do usuário ou busca um item específico pelo idItemCardapio e/ou tags
       parameters:
         - name: usuario
@@ -31,10 +37,22 @@ paths:
                 items:
                   $ref: '#/components/schemas/ItemCardapio'
         '404':
-          description: Item não encontrado
+          description: Itens não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
     put:
-      summary: Atualiza um item do cardápio pelo usuário e id do item
+      tags:
+        - Cardapio
+      summary: Atualiza um item do cardápio pelo usuário e id do item, esse endpoint aceita atualizações parciais.
       parameters:
         - name: usuario
           in: path
@@ -56,10 +74,26 @@ paths:
       responses:
         '200':
           description: Item atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AtualizarItemCardapioRequest'
         '404':
           description: Item não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
     delete:
+      tags:
+        - Cardapio
       summary: Deleta um item do cardápio pelo usuário e id do item. Opcionalmente, deleta por tag.
       description: |
         Deleta um item específico usando `idItemCardapio`. Opcionalmente, se `codigoTag` for informado, deleta todos os itens do usuário com essa tag.
@@ -77,7 +111,7 @@ paths:
           schema:
             type: integer
           description: ID do item a ser deletado
-        - name: codigoTags
+        - name: codigoTag
           in: query
           required: false
           schema:
@@ -88,11 +122,27 @@ paths:
           description: Item(ns) deletado(s) com sucesso
         '400':
           description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Item ou tag não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
-  /ms-cardapio/v1/itens:
+  /itens:
     post:
+      tags:
+        - Cardapio
       summary: Cria um item de cardápio para um usuário
       requestBody:
         required: true
@@ -103,9 +153,29 @@ paths:
       responses:
         '201':
           description: Item criado com sucesso
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Item de cardápio já existente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
-  /ms-cardapio/v1/tags:
+  /tags:
     get:
+      tags:
+        - Cardapio
       summary: Lista todas as tags de itens do cardápio
       responses:
         '200':
@@ -116,9 +186,17 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/TagsCardapio'
+        '500':
+          description: Erro interno do servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
-  /ms-cardapio/v1/itens/{usuario}/tags:
+  /itens/{usuario}/tags:
     post:
+      tags:
+        - Cardapio
       summary: Adiciona uma tag a um item do cardápio
       parameters:
         - name: usuario
@@ -148,10 +226,24 @@ paths:
       responses:
         '200':
           description: Tag adicionada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TagsCardapio'
         '400':
           description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Item ou tag não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
 components:
   schemas:
@@ -163,29 +255,35 @@ components:
         - nome
         - preco
         - disponivelLocal
-        - codigoTags
+        - tags
       properties:
         idItemCardapio:
           type: integer
+          example: 101
         usuario:
           type: string
+          example: "maria.silva"
         nome:
           type: string
+          example: "Picanha na Chapa"
         descricao:
           type: string
+          example: "Acompanha arroz, farofa, vinagrete e batata frita"
         preco:
           type: number
           format: float
+          example: 59.90
         disponivelLocal:
           type: boolean
+          example: true
         fotoPath:
           type: string
-        codigoTags:
+          example: "/imagens/picanha-chapa.jpg"
+        tags:
           type: array
           maxItems: 5
           items:
-            type: string
-          description: Lista de IDs das tags (máximo 5)
+            $ref: '#/components/schemas/TagsCardapio'
 
     NovoItemCardapio:
       type: object
@@ -198,42 +296,55 @@ components:
       properties:
         usuario:
           type: string
+          example: "jose.almeida"
         nome:
           type: string
+          example: "Feijoada Completa"
         codigoTags:
           type: array
           maxItems: 5
           items:
             type: string
+          example: ["01", "02"]
         descricao:
           type: string
+          example: "Feijoada com arroz, couve refogada e laranja"
         preco:
           type: number
           format: float
+          example: 42.00
         disponivelLocal:
           type: boolean
+          example: true
         fotoPath:
           type: string
+          example: "/imagens/feijoada.jpg"
 
     AtualizarItemCardapioRequest:
       type: object
       properties:
         nome:
           type: string
+          example: "Feijoada Light"
         codigoTags:
           type: array
           maxItems: 5
           items:
             type: string
+          example: ["01"]
         descricao:
           type: string
+          example: "Menos gordura, acompanha arroz integral"
         preco:
           type: number
           format: float
+          example: 39.90
         disponivelLocal:
           type: boolean
+          example: false
         fotoPath:
           type: string
+          example: "/imagens/feijoada-light.jpg"
 
     TagsCardapio:
       type: object
@@ -243,5 +354,27 @@ components:
       properties:
         codigoTags:
           type: string
+          example: "01"
         nome:
           type: string
+          example: "Sobremesas"
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: "2025-08-04T14:22:31.100Z"
+        status:
+          type: integer
+          example: 404
+        error:
+          type: string
+          example: "Not Found"
+        message:
+          type: string
+          example: "Item não encontrado"
+        path:
+          type: string
+          example: "/itens/jose.almeida"

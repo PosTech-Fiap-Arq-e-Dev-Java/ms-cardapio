@@ -7,16 +7,18 @@ public class ItemCardapioDomain {
     private Long idItemCardapio;
     private String usuario;
     private String nome;
-    private List<String> codigoTags;
+    private List<Integer> codigoTags;
     private String descricao;
     private Double preco;
     private Boolean disponivelLocal;
     private String fotoPath;
 
+    private List<TagsCardapioDomain> tags;
+
     public ItemCardapioDomain() {
     }
 
-    public ItemCardapioDomain(Long idItemCardapio, String usuario, String nome, List<String> codigoTags,
+    public ItemCardapioDomain(Long idItemCardapio, String usuario, String nome, List<Integer> codigoTags,
                               String descricao, Double preco, Boolean disponivelLocal, String fotoPath) {
         this.idItemCardapio = idItemCardapio;
         this.usuario = usuario;
@@ -52,11 +54,11 @@ public class ItemCardapioDomain {
         this.nome = nome;
     }
 
-    public List<String> getCodigoTags() {
+    public List<Integer> getCodigoTags() {
         return codigoTags;
     }
 
-    public void setCodigoTags(List<String> codigoTags) {
+    public void setCodigoTags(List<Integer> codigoTags) {
         this.codigoTags = codigoTags;
     }
 
@@ -90,6 +92,14 @@ public class ItemCardapioDomain {
 
     public void setFotoPath(String fotoPath) {
         this.fotoPath = fotoPath;
+    }
+
+    public List<TagsCardapioDomain> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagsCardapioDomain> tags) {
+        this.tags = tags;
     }
 }
 

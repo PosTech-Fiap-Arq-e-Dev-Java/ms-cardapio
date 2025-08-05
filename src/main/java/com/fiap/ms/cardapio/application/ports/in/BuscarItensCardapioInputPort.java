@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface BuscarItensCardapioInputPort {
 
-    ItemCardapioDomain buscarPorUsuarioEId(String usuario, Long idItemCardapio);
+    ItemCardapioDomain buscarPorUsuarioEIdItemCardapio(String usuario, Long idItemCardapio);
 
     List<ItemCardapioDomain> buscarPorUsuario(String usuario);
 }

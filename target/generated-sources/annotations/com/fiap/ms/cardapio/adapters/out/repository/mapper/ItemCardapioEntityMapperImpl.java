@@ -2,13 +2,14 @@ package com.fiap.ms.cardapio.adapters.out.repository.mapper;
 
 import com.fiap.ms.cardapio.adapters.out.repository.entity.ItemCardapioEntity;
 import com.fiap.ms.cardapio.application.core.domain.ItemCardapioDomain;
+import com.fiap.ms.cardapioDomain.gen.model.ItemCardapioDto;
 import java.math.BigDecimal;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-08-03T22:46:05-0300",
+    date = "2025-08-05T11:02:20-0300",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.15 (Amazon.com Inc.)"
 )
 @Component
@@ -56,5 +57,30 @@ public class ItemCardapioEntityMapperImpl implements ItemCardapioEntityMapper {
         itemCardapioEntity.setUsuario( domain.getUsuario() );
 
         return itemCardapioEntity;
+    }
+
+    @Override
+    public ItemCardapioDto toDto(ItemCardapioEntity entity) {
+        if ( entity == null ) {
+            return null;
+        }
+
+        ItemCardapioDto itemCardapioDto = new ItemCardapioDto();
+
+        if ( entity.getIdItemCardapio() != null ) {
+            itemCardapioDto.setIdItemCardapio( entity.getIdItemCardapio().intValue() );
+        }
+        itemCardapioDto.setUsuario( entity.getUsuario() );
+        itemCardapioDto.setNome( entity.getNome() );
+        itemCardapioDto.setDescricao( entity.getDescricao() );
+        if ( entity.getPreco() != null ) {
+            itemCardapioDto.setPreco( entity.getPreco().floatValue() );
+        }
+        itemCardapioDto.setDisponivelLocal( entity.getDisponivelLocal() );
+        itemCardapioDto.setFotoPath( entity.getFotoPath() );
+
+        itemCardapioDto.setTags( mapTags(entity.getCodigoTags()) );
+
+        return itemCardapioDto;
     }
 }

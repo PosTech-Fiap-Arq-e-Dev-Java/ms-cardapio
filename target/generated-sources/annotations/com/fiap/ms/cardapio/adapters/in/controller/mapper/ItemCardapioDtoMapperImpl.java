@@ -2,9 +2,11 @@ package com.fiap.ms.cardapio.adapters.in.controller.mapper;
 
 import com.fiap.ms.cardapio.adapters.out.repository.entity.ItemCardapioEntity;
 import com.fiap.ms.cardapio.application.core.domain.ItemCardapioDomain;
+import com.fiap.ms.cardapio.application.core.domain.TagsCardapioDomain;
 import com.fiap.ms.cardapioDomain.gen.model.AtualizarItemCardapioRequestDto;
 import com.fiap.ms.cardapioDomain.gen.model.ItemCardapioDto;
 import com.fiap.ms.cardapioDomain.gen.model.NovoItemCardapioDto;
+import com.fiap.ms.cardapioDomain.gen.model.TagsCardapioDto;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-08-03T22:46:05-0300",
+    date = "2025-08-05T11:02:20-0300",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.15 (Amazon.com Inc.)"
 )
 @Component
@@ -43,25 +45,6 @@ public class ItemCardapioDtoMapperImpl implements ItemCardapioDtoMapper {
     }
 
     @Override
-    public ItemCardapioDomain toDomain(AtualizarItemCardapioRequestDto dto) {
-        if ( dto == null ) {
-            return null;
-        }
-
-        ItemCardapioDomain itemCardapioDomain = new ItemCardapioDomain();
-
-        itemCardapioDomain.setNome( dto.getNome() );
-        itemCardapioDomain.setDescricao( dto.getDescricao() );
-        if ( dto.getPreco() != null ) {
-            itemCardapioDomain.setPreco( dto.getPreco().doubleValue() );
-        }
-        itemCardapioDomain.setDisponivelLocal( dto.getDisponivelLocal() );
-        itemCardapioDomain.setFotoPath( dto.getFotoPath() );
-
-        return itemCardapioDomain;
-    }
-
-    @Override
     public ItemCardapioDomain toDomain(NovoItemCardapioDto dto) {
         if ( dto == null ) {
             return null;
@@ -70,6 +53,7 @@ public class ItemCardapioDtoMapperImpl implements ItemCardapioDtoMapper {
         ItemCardapioDomain itemCardapioDomain = new ItemCardapioDomain();
 
         itemCardapioDomain.setUsuario( dto.getUsuario() );
+        itemCardapioDomain.setCodigoTags( stringListToIntegerList( dto.getCodigoTags() ) );
         itemCardapioDomain.setNome( dto.getNome() );
         itemCardapioDomain.setDescricao( dto.getDescricao() );
         if ( dto.getPreco() != null ) {
@@ -93,10 +77,6 @@ public class ItemCardapioDtoMapperImpl implements ItemCardapioDtoMapper {
             itemCardapioDto.setIdItemCardapio( domain.getIdItemCardapio().intValue() );
         }
         itemCardapioDto.setUsuario( domain.getUsuario() );
-        List<String> list = domain.getCodigoTags();
-        if ( list != null ) {
-            itemCardapioDto.setCodigoTags( new ArrayList<String>( list ) );
-        }
         itemCardapioDto.setNome( domain.getNome() );
         itemCardapioDto.setDescricao( domain.getDescricao() );
         if ( domain.getPreco() != null ) {
@@ -104,6 +84,7 @@ public class ItemCardapioDtoMapperImpl implements ItemCardapioDtoMapper {
         }
         itemCardapioDto.setDisponivelLocal( domain.getDisponivelLocal() );
         itemCardapioDto.setFotoPath( domain.getFotoPath() );
+        itemCardapioDto.setTags( tagsCardapioDomainListToTagsCardapioDtoList( domain.getTags() ) );
 
         return itemCardapioDto;
     }
@@ -126,5 +107,75 @@ public class ItemCardapioDtoMapperImpl implements ItemCardapioDtoMapper {
         itemCardapioEntity.setFotoPath( domain.getFotoPath() );
 
         return itemCardapioEntity;
+    }
+
+    @Override
+    public ItemCardapioDomain toDomain(AtualizarItemCardapioRequestDto dto) {
+        if ( dto == null ) {
+            return null;
+        }
+
+        ItemCardapioDomain itemCardapioDomain = new ItemCardapioDomain();
+
+        itemCardapioDomain.setNome( dto.getNome() );
+        itemCardapioDomain.setDescricao( dto.getDescricao() );
+        if ( dto.getPreco() != null ) {
+            itemCardapioDomain.setPreco( dto.getPreco().doubleValue() );
+        }
+        itemCardapioDomain.setDisponivelLocal( dto.getDisponivelLocal() );
+        itemCardapioDomain.setFotoPath( dto.getFotoPath() );
+
+        return itemCardapioDomain;
+    }
+
+    @Override
+    public void updateEntityFromDto(AtualizarItemCardapioRequestDto dto, ItemCardapioEntity entity) {
+        if ( dto == null ) {
+            return;
+        }
+
+        if ( dto.getNome() != null ) {
+            entity.setNome( dto.getNome() );
+        }
+        if ( dto.getDescricao() != null ) {
+            entity.setDescricao( dto.getDescricao() );
+        }
+        if ( dto.getPreco() != null ) {
+            entity.setPreco( BigDecimal.valueOf( dto.getPreco() ) );
+        }
+        if ( dto.getDisponivelLocal() != null ) {
+            entity.setDisponivelLocal( dto.getDisponivelLocal() );
+        }
+        if ( dto.getFotoPath() != null ) {
+            entity.setFotoPath( dto.getFotoPath() );
+        }
+    }
+
+    protected TagsCardapioDto tagsCardapioDomainToTagsCardapioDto(TagsCardapioDomain tagsCardapioDomain) {
+        if ( tagsCardapioDomain == null ) {
+            return null;
+        }
+
+        TagsCardapioDto tagsCardapioDto = new TagsCardapioDto();
+
+        if ( tagsCardapioDomain.getCodigoTags() != null ) {
+            tagsCardapioDto.setCodigoTags( String.valueOf( tagsCardapioDomain.getCodigoTags() ) );
+        }
+        tagsCardapioDto.setNome( tagsCardapioDomain.getNome() );
+
+        return tagsCardapioDto;
+    }
+
+    protected List<TagsCardapioDto> tagsCardapioDomainListToTagsCardapioDtoList(List<TagsCardapioDomain> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<TagsCardapioDto> list1 = new ArrayList<TagsCardapioDto>( list.size() );
+        for ( TagsCardapioDomain tagsCardapioDomain : list ) {
+            list1.add( tagsCardapioDomainToTagsCardapioDto( tagsCardapioDomain ) );
+        }
+
+        return list1;
     }
 }

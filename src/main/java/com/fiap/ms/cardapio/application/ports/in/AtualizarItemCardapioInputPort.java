@@ -6,5 +6,3 @@ public interface AtualizarItemCardapioInputPort {
 
     void atualizar(String usuario, Long idItemCardapio, ItemCardapioDomain itemAtualizado);
 }
-
-

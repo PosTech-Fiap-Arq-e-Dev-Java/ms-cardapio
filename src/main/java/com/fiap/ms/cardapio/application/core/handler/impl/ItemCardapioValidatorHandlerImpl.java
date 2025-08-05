@@ -6,16 +6,16 @@ import com.fiap.ms.cardapio.application.core.domain.exception.AtualizarDadosIgua
 import com.fiap.ms.cardapio.application.core.domain.exception.CampoObrigatorioException;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 @Component
 public class ItemCardapioValidatorHandlerImpl implements ItemCardapioValidatorHandler {
 
     @Override
     public void validarCamposObrigatoriosItemCardapio(ItemCardapioDomain item) {
-        if (Objects.isNull(item)
-                || item.getIdItemCardapio() == null
-                || item.getUsuario() == null || item.getUsuario().isBlank()
+        if (item.getUsuario() == null || item.getUsuario().isBlank()
                 || item.getNome() == null || item.getNome().isBlank()
                 || item.getPreco() == null
                 || item.getDisponivelLocal() == null
@@ -27,11 +27,20 @@ public class ItemCardapioValidatorHandlerImpl implements ItemCardapioValidatorHa
 
     @Override
     public void validarCamposObrigatoriosAtualizarItemCardapio(ItemCardapioDomain item) {
-        if (Objects.isNull(item)
-                || (item.getNome() != null && item.getNome().isBlank())
-                || (item.getDescricao() != null && item.getDescricao().isBlank())
-                || (item.getFotoPath() != null && item.getFotoPath().isBlank())
-                || (item.getPreco() != null && item.getPreco() <= 0)) {
+        if (item == null) {
+            throw new CampoObrigatorioException();
+        }
+
+        boolean todosCamposInvalidos = Stream.of(
+                isNullOrBlank(item.getNome()),
+                isNullOrBlank(item.getDescricao()),
+                isNullOrBlank(item.getFotoPath()),
+                item.getDisponivelLocal() == null,
+                isNullOrEmpty(item.getCodigoTags()),
+                item.getPreco() == null || item.getPreco() <= 0
+        ).allMatch(Boolean::booleanValue);
+
+        if (todosCamposInvalidos) {
             throw new CampoObrigatorioException();
         }
     }
@@ -46,6 +55,15 @@ public class ItemCardapioValidatorHandlerImpl implements ItemCardapioValidatorHa
             throw new AtualizarDadosIguaisException();
         }
     }
+
+    private boolean isNullOrBlank(String s) {
+        return s == null || s.isBlank();
+    }
+
+    private boolean isNullOrEmpty(Collection<?> c) {
+        return c == null || c.isEmpty();
+    }
 }
+
 
 

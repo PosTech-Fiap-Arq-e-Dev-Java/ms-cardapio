@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface ItemTagCardapioRepository extends JpaRepository<ItemTagCardapioEntity, Long> {
 
-    Optional<ItemTagCardapioEntity> findByItemCardapioIdAndTagIdAndItemCardapioUsuario(Long itemId, String codigoTags, String usuario);
+    Optional<ItemTagCardapioEntity> findByItemCardapio_IdItemCardapioAndCodigoTag_CodigoAndItemCardapio_Usuario(Long itemId, Integer codigo, String usuario);
 
 }
 

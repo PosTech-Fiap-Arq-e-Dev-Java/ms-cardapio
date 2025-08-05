@@ -1,7 +1,7 @@
 package com.fiap.ms.cardapio.adapters.out.repository.entity;
 
 import jakarta.persistence.*;
-        import lombok.*;
+import lombok.*;
 
 @Data
 @NoArgsConstructor

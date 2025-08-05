@@ -7,7 +7,6 @@ import com.fiap.ms.cardapio.application.core.domain.ItemCardapioDomain;
 import com.fiap.ms.cardapio.application.ports.in.*;
 import com.fiap.ms.cardapioDomain.CardapioApi;
 import com.fiap.ms.cardapioDomain.gen.model.*;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
 @RequestMapping("/v1")
-@RequiredArgsConstructor
 public class CardapioController implements CardapioApi {
 
     private final InserirItemCardapioInputPort inserirItemCardapioInputPort;
@@ -33,10 +32,43 @@ public class CardapioController implements CardapioApi {
     private final ItemCardapioDtoMapper itemCardapioDtoMapper;
     private final TagsCardapioDtoMapper tagsCardapioDtoMapper;
 
+    public CardapioController(
+            InserirItemCardapioInputPort inserirItemCardapioInputPort,
+            BuscarItensCardapioInputPort buscarItemCardapioInputPort,
+            AtualizarItemCardapioInputPort atualizarItemCardapioInputPort,
+            DeletarItemCardapioInputPort deletarItemCardapioInputPort,
+            ListarTagsCardapioInputPort listarTagsCardapioInputPort,
+            InserirTagItemCardapioInputPort inserirTagItemCardapioInputPort,
+            ItemCardapioDtoMapper itemCardapioDtoMapper,
+            TagsCardapioDtoMapper tagsCardapioDtoMapper
+    ) {
+        this.inserirItemCardapioInputPort = inserirItemCardapioInputPort;
+        this.buscarItemCardapioInputPort = buscarItemCardapioInputPort;
+        this.atualizarItemCardapioInputPort = atualizarItemCardapioInputPort;
+        this.deletarItemCardapioInputPort = deletarItemCardapioInputPort;
+        this.listarTagsCardapioInputPort = listarTagsCardapioInputPort;
+        this.inserirTagItemCardapioInputPort = inserirTagItemCardapioInputPort;
+        this.itemCardapioDtoMapper = itemCardapioDtoMapper;
+        this.tagsCardapioDtoMapper = tagsCardapioDtoMapper;
+    }
+
     @Override
-    public ResponseEntity<List<ItemCardapioDto>> _msCardapioV1ItensUsuarioGet(String usuario, Integer idItemCardapio) {
+    public ResponseEntity<Void> _itensPost(NovoItemCardapioDto novoItemCardapioDto) {
+        ItemCardapioDomain domain = itemCardapioDtoMapper.toDomain(novoItemCardapioDto);
+        inserirItemCardapioInputPort.inserir(domain);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Override
+    public ResponseEntity<Void> _itensUsuarioDelete(String usuario, Integer idItemCardapio, String codigoTags) {
+        executarDelete(usuario, idItemCardapio, codigoTags);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<List<ItemCardapioDto>> _itensUsuarioGet(String usuario, Integer idItemCardapio) {
         List<ItemCardapioDomain> domains = Optional.ofNullable(idItemCardapio)
-                .map(id -> buscarItemCardapioInputPort.buscarPorUsuarioEId(usuario, id.longValue()))
+                .map(id -> buscarItemCardapioInputPort.buscarPorUsuarioEIdItemCardapio(usuario, id.longValue()))
                 .map(List::of)
                 .orElseGet(() -> buscarItemCardapioInputPort.buscarPorUsuario(usuario));
 
@@ -45,15 +77,20 @@ public class CardapioController implements CardapioApi {
         }
 
         List<ItemCardapioDto> dtos = domains.stream()
-                .map(itemCardapioDtoMapper::toDto)
+                .map(domain -> {
+                    ItemCardapioDto dto = itemCardapioDtoMapper.toDto(domain);
+                    dto.setTags(buscarTagsCompletas(domain.getCodigoTags()));
+                    return dto;
+                })
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(dtos);
     }
 
+
     @Override
-    public ResponseEntity<Void> _msCardapioV1ItensUsuarioPut(String usuario, Integer idItemCardapio, AtualizarItemCardapioRequestDto atualizarDto) {
-        ItemCardapioDomain domain = itemCardapioDtoMapper.toDomain(atualizarDto);
+    public ResponseEntity<AtualizarItemCardapioRequestDto> _itensUsuarioPut(String usuario, Integer idItemCardapio, AtualizarItemCardapioRequestDto atualizarItemCardapioRequestDto) {
+        ItemCardapioDomain domain = itemCardapioDtoMapper.toDomain(atualizarItemCardapioRequestDto);
         domain.setUsuario(usuario);
         atualizarItemCardapioInputPort.atualizar(usuario, idItemCardapio.longValue(), domain);
         return ResponseEntity.noContent().build();
@@ -61,8 +98,8 @@ public class CardapioController implements CardapioApi {
 
 
     @Override
-    public ResponseEntity<Void> _msCardapioV1ItensUsuarioTagsPost(String usuario, Integer idItemCardapio, MsCardapioV1ItensUsuarioTagsPostRequestDto tagRequestDto) {
-        String codigoTag = tagRequestDto.getCodigoTags();
+    public ResponseEntity<List<TagsCardapioDto>> _itensUsuarioTagsPost(String usuario, Integer idItemCardapio, ItensUsuarioTagsPostRequestDto itensUsuarioTagsPostRequestDto) {
+        String codigoTag = itensUsuarioTagsPostRequestDto.getCodigoTags();
 
         inserirTagItemCardapioInputPort.inserirTag(usuario, idItemCardapio.longValue(), codigoTag);
 
@@ -70,30 +107,29 @@ public class CardapioController implements CardapioApi {
     }
 
     @Override
-    public ResponseEntity<List<TagsCardapioDto>> _msCardapioV1TagsGet() {
+    public ResponseEntity<List<TagsCardapioDto>> _tagsGet() {
         List<TagsCardapioDomain> tags = listarTagsCardapioInputPort.listar();
         List<TagsCardapioDto> dtos = tagsCardapioDtoMapper.toDtoList(tags);
         return ResponseEntity.ok(dtos);
     }
 
-    @Override
-    public ResponseEntity<Void> _msCardapioV1ItensUsuarioDelete(String usuario, Integer idItemCardapio) {
-        deletarItemCardapioInputPort.deletarPorUsuarioEId(usuario, idItemCardapio.longValue());
-        return ResponseEntity.noContent().build();
+    private void executarDelete(String usuario, Integer idItemCardapio, String codigoTags) {
+        if (codigoTags == null || codigoTags.isBlank()) {
+            deletarItemCardapioInputPort.deletarPorUsuarioEIdItemCardapio(usuario, idItemCardapio.longValue());
+        } else {
+            Integer codigoTagInt = Integer.valueOf(codigoTags);
+            deletarItemCardapioInputPort.deletarTagPorUsuarioEIdItemCardapio(usuario, idItemCardapio.longValue(), codigoTagInt);
+        }
     }
 
-    @Override
-    public ResponseEntity<Void> _msCardapioV1ItensUsuarioDelete(String usuario, Integer idItemCardapio, String codigoTag) {
-        deletarItemCardapioInputPort.deletarTagPorUsuarioEId(usuario, idItemCardapio.longValue(), codigoTag);
-        return ResponseEntity.noContent().build();
+    private List<TagsCardapioDto> buscarTagsCompletas(List<Integer> codigoTags) {
+        return codigoTags.stream()
+                .map(codigo -> listarTagsCardapioInputPort.buscarPorCodigo(codigo)
+                        .map(tagsCardapioDtoMapper::toDto)
+                        .orElse(null))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
-
-    @Override
-    public ResponseEntity<Void> _msCardapioV1ItensPost(NovoItemCardapioDto novoItemCardapioDto) {
-        ItemCardapioDomain domain = itemCardapioDtoMapper.toDomain(novoItemCardapioDto);
-        inserirItemCardapioInputPort.inserir(domain);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
 }
+
 

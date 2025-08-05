@@ -23,7 +23,7 @@ import jakarta.annotation.Generated;
  */
 
 @JsonTypeName("AtualizarItemCardapioRequest")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-03T22:46:04.803020-03:00[America/Sao_Paulo]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-05T11:02:19.156837-03:00[America/Sao_Paulo]")
 public class AtualizarItemCardapioRequestDto {
 
   private String nome;
@@ -49,7 +49,7 @@ public class AtualizarItemCardapioRequestDto {
    * @return nome
   */
   
-  @Schema(name = "nome", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "nome", example = "Feijoada Light", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("nome")
   public String getNome() {
     return nome;
@@ -77,7 +77,7 @@ public class AtualizarItemCardapioRequestDto {
    * @return codigoTags
   */
   @Size(max = 5) 
-  @Schema(name = "codigoTags", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "codigoTags", example = "[\"01\"]", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("codigoTags")
   public List<String> getCodigoTags() {
     return codigoTags;
@@ -97,7 +97,7 @@ public class AtualizarItemCardapioRequestDto {
    * @return descricao
   */
   
-  @Schema(name = "descricao", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "descricao", example = "Menos gordura, acompanha arroz integral", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("descricao")
   public String getDescricao() {
     return descricao;
@@ -117,7 +117,7 @@ public class AtualizarItemCardapioRequestDto {
    * @return preco
   */
   
-  @Schema(name = "preco", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "preco", example = "39.9", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("preco")
   public Float getPreco() {
     return preco;
@@ -137,7 +137,7 @@ public class AtualizarItemCardapioRequestDto {
    * @return disponivelLocal
   */
   
-  @Schema(name = "disponivelLocal", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "disponivelLocal", example = "false", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("disponivelLocal")
   public Boolean getDisponivelLocal() {
     return disponivelLocal;
@@ -157,7 +157,7 @@ public class AtualizarItemCardapioRequestDto {
    * @return fotoPath
   */
   
-  @Schema(name = "fotoPath", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "fotoPath", example = "/imagens/feijoada-light.jpg", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("fotoPath")
   public String getFotoPath() {
     return fotoPath;

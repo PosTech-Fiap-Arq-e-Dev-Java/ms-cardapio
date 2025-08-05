@@ -2,21 +2,21 @@ package com.fiap.ms.cardapio.application.core.domain;
 
 public class TagsCardapioDomain {
 
-    private String codigoTags;
+    private Integer codigoTags;
     private String nome;
 
     public TagsCardapioDomain() {}
 
-    public TagsCardapioDomain(String codigoTags, String nome) {
+    public TagsCardapioDomain(Integer codigoTags, String nome) {
         this.codigoTags = codigoTags;
         this.nome = nome;
     }
 
-    public String getCodigoTags() {
+    public Integer getCodigoTags() {
         return codigoTags;
     }
 
-    public void setCodigoTags(String codigoTags) {
+    public void setCodigoTags(Integer codigoTags) {
         this.codigoTags = codigoTags;
     }
 

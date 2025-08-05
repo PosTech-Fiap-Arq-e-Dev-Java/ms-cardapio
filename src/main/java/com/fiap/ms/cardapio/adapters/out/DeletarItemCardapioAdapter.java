@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Component
 @RequiredArgsConstructor
 public class DeletarItemCardapioAdapter implements DeletarItemCardapioOutputPort {
@@ -17,16 +16,23 @@ public class DeletarItemCardapioAdapter implements DeletarItemCardapioOutputPort
 
     @Override
     @Transactional
-    public void deletarPorUsuarioEId(String usuario, Long idItemCardapio) {
-        itemCardapioRepository.findByUsuarioAndId(usuario, idItemCardapio)
+    public void deletarPorUsuarioEIdItemCardapio(String usuario, Long idItemCardapio) {
+        itemCardapioRepository.findByUsuarioAndIdItemCardapio(usuario, idItemCardapio)
                 .ifPresent(itemCardapioRepository::delete);
     }
 
     @Override
     @Transactional
-    public void deletarTagPorUsuarioEId(String usuario, Long idItemCardapio, String codigoTags) {
-        itemTagCardapioRepository.findByItemCardapioIdAndTagIdAndItemCardapioUsuario(idItemCardapio, codigoTags, usuario)
-                .ifPresent(itemTagCardapioRepository::delete);
+    public void deletarTagPorUsuarioEIdItemCardapio(String usuario, Long idItemCardapio, Integer codigoTag) {
+        itemCardapioRepository.findByUsuarioAndIdItemCardapio(usuario, idItemCardapio).ifPresent(itemCardapio -> {
+            itemCardapio.getCodigoTags().stream()
+                    .filter(tag -> tag.getCodigoTag().getCodigo().equals(codigoTag))
+                    .findFirst()
+                    .ifPresent(tagARemover -> {
+                        itemCardapio.removeTag(tagARemover);
+                        itemCardapioRepository.save(itemCardapio);
+                    });
+        });
     }
 }
 

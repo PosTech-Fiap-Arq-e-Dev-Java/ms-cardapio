@@ -2,10 +2,9 @@ package com.fiap.ms.cardapio.application.ports.in;
 
 public interface DeletarItemCardapioInputPort {
 
-    void deletarPorUsuarioEId(String usuario, Long idItemCardapio);
+    void deletarPorUsuarioEIdItemCardapio(String usuario, Long idItemCardapio);
 
-    void deletarTagPorUsuarioEId(String usuario, Long idItemCardapio, String codigoTags);
-
-
+    void deletarTagPorUsuarioEIdItemCardapio(String usuario, Long idItemCardapio, Integer codigoTags);
+    ;
 }
 

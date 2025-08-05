@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-08-03T22:46:05-0300",
+    date = "2025-08-05T11:02:20-0300",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.15 (Amazon.com Inc.)"
 )
 @Component
@@ -23,7 +23,9 @@ public class TagsCardapioDtoMapperImpl implements TagsCardapioDtoMapper {
 
         TagsCardapioDto tagsCardapioDto = new TagsCardapioDto();
 
-        tagsCardapioDto.setCodigoTags( domain.getCodigoTags() );
+        if ( domain.getCodigoTags() != null ) {
+            tagsCardapioDto.setCodigoTags( String.valueOf( domain.getCodigoTags() ) );
+        }
         tagsCardapioDto.setNome( domain.getNome() );
 
         return tagsCardapioDto;

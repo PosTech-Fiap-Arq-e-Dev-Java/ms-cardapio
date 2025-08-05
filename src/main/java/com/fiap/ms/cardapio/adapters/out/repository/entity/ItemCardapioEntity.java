@@ -40,6 +40,16 @@ public class ItemCardapioEntity {
 
     @OneToMany(mappedBy = "itemCardapio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemTagCardapioEntity> codigoTags = new ArrayList<>();
+
+    public void addTag(ItemTagCardapioEntity tagRelacionamento) {
+        tagRelacionamento.setItemCardapio(this);
+        this.codigoTags.add(tagRelacionamento);
+    }
+
+    public void removeTag(ItemTagCardapioEntity tagRelacionamento) {
+        tagRelacionamento.setItemCardapio(null);
+        this.codigoTags.remove(tagRelacionamento);
+    }
 }
 
 

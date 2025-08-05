@@ -17,8 +17,8 @@ public class BuscarItensCardapioUseCase implements BuscarItensCardapioInputPort 
     }
 
     @Override
-    public ItemCardapioDomain buscarPorUsuarioEId(String usuario, Long idItemCardapio) {
-        return buscarItensCardapioOutputPort.buscarPorUsuarioEId(usuario, idItemCardapio)
+    public ItemCardapioDomain buscarPorUsuarioEIdItemCardapio(String usuario, Long idItemCardapio) {
+        return buscarItensCardapioOutputPort.buscarPorUsuarioEIdItemCardapio(usuario, idItemCardapio)
                 .orElseThrow(() -> new ItemCardapioNaoEncontradoException(usuario, idItemCardapio));
     }
 

@@ -15,7 +15,7 @@ public class TagsCardapioEntity {
 
     @Id
     @Column(name = "codigo", nullable = false, unique = true)
-    private String codigo;
+    private Integer codigo;
 
     @Column(name = "nome", nullable = false)
     private String nome;

@@ -1,0 +1,11 @@
+com/fiap/ms/cardapio/adapters/out/InserirItemCardapioAdapterTest.class
+com/fiap/ms/cardapio/application/core/ListarTagsCardapioUseCaseTest.class
+com/fiap/ms/cardapio/application/core/AtualizaItemCardapioUseCaseTest.class
+com/fiap/ms/cardapio/adapters/out/BuscarTagsCardapioAdapterTest.class
+com/fiap/ms/cardapio/application/core/InserirTagItemCardapioUseCaseTest.class
+com/fiap/ms/cardapio/application/core/BuscarItensCardapioUseCaseTest.class
+com/fiap/ms/cardapio/application/core/DeletarItemCardapioUseCaseTest.class
+com/fiap/ms/cardapio/application/aaaaaa.class
+com/fiap/ms/cardapio/adapters/out/BuscarItensCardapioAdapterTest.class
+com/fiap/ms/cardapio/adapters/out/AtualizarItemCardapioAdapterTest.class
+com/fiap/ms/cardapio/adapters/out/DeletarItemCardapioAdapterTest.class

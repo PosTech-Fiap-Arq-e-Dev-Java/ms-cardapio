@@ -6,146 +6,194 @@
 package com.fiap.ms.cardapioDomain;
 
 import com.fiap.ms.cardapioDomain.gen.model.AtualizarItemCardapioRequestDto;
+import com.fiap.ms.cardapioDomain.gen.model.ErrorResponseDto;
 import com.fiap.ms.cardapioDomain.gen.model.ItemCardapioDto;
-import com.fiap.ms.cardapioDomain.gen.model.MsCardapioV1ItensUsuarioTagsPostRequestDto;
+import com.fiap.ms.cardapioDomain.gen.model.ItensUsuarioTagsPostRequestDto;
 import com.fiap.ms.cardapioDomain.gen.model.NovoItemCardapioDto;
 import com.fiap.ms.cardapioDomain.gen.model.TagsCardapioDto;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.util.List;
-
+import java.util.Map;
+import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-03T18:39:26.933011-03:00[America/Sao_Paulo]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-05T11:02:19.156837-03:00[America/Sao_Paulo]")
 @Validated
-@Tag(name = "Default", description = "the Default API")
+@Tag(name = "Cardapio", description = "Endpoints para gerenciamento de cardapio")
 public interface CardapioApi {
 
     /**
-     * POST /ms-cardapio/v1/itens : Cria um item de cardápio para um usuário
+     * POST /itens : Cria um item de cardápio para um usuário
      *
      * @param novoItemCardapioDto  (required)
      * @return Item criado com sucesso (status code 201)
+     *         or Requisição inválida (status code 400)
+     *         or Item de cardápio já existente (status code 409)
+     *         or Erro interno do servidor (status code 500)
      */
     @Operation(
-        operationId = "msCardapioV1ItensPost",
+        operationId = "itensPost",
         summary = "Cria um item de cardápio para um usuário",
+        tags = { "Cardapio" },
         responses = {
-            @ApiResponse(responseCode = "201", description = "Item criado com sucesso")
+            @ApiResponse(responseCode = "201", description = "Item criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDto.class))
+            }),
+            @ApiResponse(responseCode = "409", description = "Item de cardápio já existente", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDto.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDto.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/ms-cardapio/v1/itens",
+        value = "/itens",
+        produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Void> _msCardapioV1ItensPost(
+    ResponseEntity<Void> _itensPost(
         @Parameter(name = "NovoItemCardapioDto", description = "", required = true) @Valid @RequestBody NovoItemCardapioDto novoItemCardapioDto
     );
 
 
-    ResponseEntity<Void> _msCardapioV1ItensUsuarioDelete(String usuario, Integer idItemCardapio);
-
     /**
-     * DELETE /ms-cardapio/v1/itens/{usuario} : Deleta um item do cardápio pelo usuário e id do item. Opcionalmente, deleta por tag.
+     * DELETE /itens/{usuario} : Deleta um item do cardápio pelo usuário e id do item. Opcionalmente, deleta por tag.
      * Deleta um item específico usando &#x60;idItemCardapio&#x60;. Opcionalmente, se &#x60;codigoTag&#x60; for informado, deleta todos os itens do usuário com essa tag. O parâmetro &#x60;idItemCardapio&#x60; é obrigatório. 
      *
      * @param usuario Identificador do usuário dono do cardápio (required)
      * @param idItemCardapio ID do item a ser deletado (required)
-     * @param codigoTags Codigo da tag para deletar todos os itens do usuário com essa tag (optional)
+     * @param codigoTag Codigo da tag para deletar todos os itens do usuário com essa tag (optional)
      * @return Item(ns) deletado(s) com sucesso (status code 204)
      *         or Requisição inválida (status code 400)
      *         or Item ou tag não encontrado (status code 404)
+     *         or Erro interno do servidor (status code 500)
      */
     @Operation(
-        operationId = "msCardapioV1ItensUsuarioDelete",
+        operationId = "itensUsuarioDelete",
         summary = "Deleta um item do cardápio pelo usuário e id do item. Opcionalmente, deleta por tag.",
         description = "Deleta um item específico usando `idItemCardapio`. Opcionalmente, se `codigoTag` for informado, deleta todos os itens do usuário com essa tag. O parâmetro `idItemCardapio` é obrigatório. ",
+        tags = { "Cardapio" },
         responses = {
             @ApiResponse(responseCode = "204", description = "Item(ns) deletado(s) com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
-            @ApiResponse(responseCode = "404", description = "Item ou tag não encontrado")
+            @ApiResponse(responseCode = "400", description = "Requisição inválida", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDto.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Item ou tag não encontrado", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDto.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDto.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.DELETE,
-        value = "/ms-cardapio/v1/itens/{usuario}"
+        value = "/itens/{usuario}",
+        produces = { "application/json" }
     )
     
-    ResponseEntity<Void> _msCardapioV1ItensUsuarioDelete(
+    ResponseEntity<Void> _itensUsuarioDelete(
         @Parameter(name = "usuario", description = "Identificador do usuário dono do cardápio", required = true, in = ParameterIn.PATH) @PathVariable("usuario") String usuario,
         @NotNull @Parameter(name = "idItemCardapio", description = "ID do item a ser deletado", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "idItemCardapio", required = true) Integer idItemCardapio,
-        @Parameter(name = "codigoTags", description = "Codigo da tag para deletar todos os itens do usuário com essa tag", in = ParameterIn.QUERY) @Valid @RequestParam(value = "codigoTags", required = false) String codigoTags
+        @Parameter(name = "codigoTag", description = "Codigo da tag para deletar todos os itens do usuário com essa tag", in = ParameterIn.QUERY) @Valid @RequestParam(value = "codigoTag", required = false) String codigoTag
     );
 
 
     /**
-     * GET /ms-cardapio/v1/itens/{usuario} : Lista todos os itens do usuário ou busca um item específico pelo idItemCardapio e/ou tags
+     * GET /itens/{usuario} : Lista todos os itens do usuário ou busca um item específico pelo idItemCardapio e/ou tags
      *
      * @param usuario Identificador do usuário dono do cardápio (required)
      * @param idItemCardapio ID do item para filtrar (opcional) (optional)
      * @return Lista de itens ou item específico (status code 200)
-     *         or Item não encontrado (status code 404)
+     *         or Itens não encontrado (status code 404)
+     *         or Erro interno do servidor (status code 500)
      */
     @Operation(
-        operationId = "msCardapioV1ItensUsuarioGet",
+        operationId = "itensUsuarioGet",
         summary = "Lista todos os itens do usuário ou busca um item específico pelo idItemCardapio e/ou tags",
+        tags = { "Cardapio" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Lista de itens ou item específico", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ItemCardapioDto.class)))
             }),
-            @ApiResponse(responseCode = "404", description = "Item não encontrado")
+            @ApiResponse(responseCode = "404", description = "Itens não encontrado", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDto.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDto.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/ms-cardapio/v1/itens/{usuario}",
+        value = "/itens/{usuario}",
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<ItemCardapioDto>> _msCardapioV1ItensUsuarioGet(
+    ResponseEntity<List<ItemCardapioDto>> _itensUsuarioGet(
         @Parameter(name = "usuario", description = "Identificador do usuário dono do cardápio", required = true, in = ParameterIn.PATH) @PathVariable("usuario") String usuario,
         @Parameter(name = "idItemCardapio", description = "ID do item para filtrar (opcional)", in = ParameterIn.QUERY) @Valid @RequestParam(value = "idItemCardapio", required = false) Integer idItemCardapio
     );
 
 
     /**
-     * PUT /ms-cardapio/v1/itens/{usuario} : Atualiza um item do cardápio pelo usuário e id do item
+     * PUT /itens/{usuario} : Atualiza um item do cardápio pelo usuário e id do item, esse endpoint aceita atualizações parciais.
      *
      * @param usuario  (required)
      * @param idItemCardapio ID do item a ser atualizado (required)
      * @param atualizarItemCardapioRequestDto  (required)
      * @return Item atualizado com sucesso (status code 200)
      *         or Item não encontrado (status code 404)
+     *         or Erro interno do servidor (status code 500)
      */
     @Operation(
-        operationId = "msCardapioV1ItensUsuarioPut",
-        summary = "Atualiza um item do cardápio pelo usuário e id do item",
+        operationId = "itensUsuarioPut",
+        summary = "Atualiza um item do cardápio pelo usuário e id do item, esse endpoint aceita atualizações parciais.",
+        tags = { "Cardapio" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Item atualizado com sucesso"),
-            @ApiResponse(responseCode = "404", description = "Item não encontrado")
+            @ApiResponse(responseCode = "200", description = "Item atualizado com sucesso", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = AtualizarItemCardapioRequestDto.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Item não encontrado", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDto.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDto.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.PUT,
-        value = "/ms-cardapio/v1/itens/{usuario}",
+        value = "/itens/{usuario}",
+        produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Void> _msCardapioV1ItensUsuarioPut(
+    ResponseEntity<AtualizarItemCardapioRequestDto> _itensUsuarioPut(
         @Parameter(name = "usuario", description = "", required = true, in = ParameterIn.PATH) @PathVariable("usuario") String usuario,
         @NotNull @Parameter(name = "idItemCardapio", description = "ID do item a ser atualizado", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "idItemCardapio", required = true) Integer idItemCardapio,
         @Parameter(name = "AtualizarItemCardapioRequestDto", description = "", required = true) @Valid @RequestBody AtualizarItemCardapioRequestDto atualizarItemCardapioRequestDto
@@ -153,58 +201,71 @@ public interface CardapioApi {
 
 
     /**
-     * POST /ms-cardapio/v1/itens/{usuario}/tags : Adiciona uma tag a um item do cardápio
+     * POST /itens/{usuario}/tags : Adiciona uma tag a um item do cardápio
      *
      * @param usuario Identificador do usuário dono do cardápio (required)
      * @param idItemCardapio ID do item ao qual será adicionada a tag (required)
-     * @param msCardapioV1ItensUsuarioTagsPostRequestDto  (required)
+     * @param itensUsuarioTagsPostRequestDto  (required)
      * @return Tag adicionada com sucesso (status code 200)
      *         or Requisição inválida (status code 400)
      *         or Item ou tag não encontrado (status code 404)
      */
     @Operation(
-        operationId = "msCardapioV1ItensUsuarioTagsPost",
+        operationId = "itensUsuarioTagsPost",
         summary = "Adiciona uma tag a um item do cardápio",
+        tags = { "Cardapio" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "Tag adicionada com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Requisição inválida"),
-            @ApiResponse(responseCode = "404", description = "Item ou tag não encontrado")
+            @ApiResponse(responseCode = "200", description = "Tag adicionada com sucesso", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TagsCardapioDto.class)))
+            }),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDto.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Item ou tag não encontrado", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDto.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.POST,
-        value = "/ms-cardapio/v1/itens/{usuario}/tags",
+        value = "/itens/{usuario}/tags",
+        produces = { "application/json" },
         consumes = { "application/json" }
     )
     
-    ResponseEntity<Void> _msCardapioV1ItensUsuarioTagsPost(
+    ResponseEntity<List<TagsCardapioDto>> _itensUsuarioTagsPost(
         @Parameter(name = "usuario", description = "Identificador do usuário dono do cardápio", required = true, in = ParameterIn.PATH) @PathVariable("usuario") String usuario,
         @NotNull @Parameter(name = "idItemCardapio", description = "ID do item ao qual será adicionada a tag", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "idItemCardapio", required = true) Integer idItemCardapio,
-        @Parameter(name = "MsCardapioV1ItensUsuarioTagsPostRequestDto", description = "", required = true) @Valid @RequestBody MsCardapioV1ItensUsuarioTagsPostRequestDto msCardapioV1ItensUsuarioTagsPostRequestDto
+        @Parameter(name = "ItensUsuarioTagsPostRequestDto", description = "", required = true) @Valid @RequestBody ItensUsuarioTagsPostRequestDto itensUsuarioTagsPostRequestDto
     );
 
 
     /**
-     * GET /ms-cardapio/v1/tags : Lista todas as tags de itens do cardápio
+     * GET /tags : Lista todas as tags de itens do cardápio
      *
      * @return Lista de tags disponíveis (status code 200)
+     *         or Erro interno do servidor (status code 500)
      */
     @Operation(
-        operationId = "msCardapioV1TagsGet",
+        operationId = "tagsGet",
         summary = "Lista todas as tags de itens do cardápio",
+        tags = { "Cardapio" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Lista de tags disponíveis", content = {
                 @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TagsCardapioDto.class)))
+            }),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponseDto.class))
             })
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = "/ms-cardapio/v1/tags",
+        value = "/tags",
         produces = { "application/json" }
     )
     
-    ResponseEntity<List<TagsCardapioDto>> _msCardapioV1TagsGet(
+    ResponseEntity<List<TagsCardapioDto>> _tagsGet(
         
     );
 

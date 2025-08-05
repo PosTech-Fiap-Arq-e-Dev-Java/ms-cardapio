@@ -10,10 +10,9 @@ import java.util.Optional;
 @Repository
 public interface ItemCardapioRepository extends JpaRepository<ItemCardapioEntity, Long> {
 
-    Optional<ItemCardapioEntity> findByUsuarioAndId(String usuario, Long id);
+    Optional<ItemCardapioEntity> findByUsuarioAndIdItemCardapio(String usuario, Long idItemCardapio);
 
     List<ItemCardapioEntity> findByUsuario(String usuario);
-
 }
 
 

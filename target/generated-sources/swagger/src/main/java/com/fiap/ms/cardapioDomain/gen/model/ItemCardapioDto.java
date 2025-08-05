@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fiap.ms.cardapioDomain.gen.model.TagsCardapioDto;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +24,7 @@ import jakarta.annotation.Generated;
  */
 
 @JsonTypeName("ItemCardapio")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-03T22:46:04.803020-03:00[America/Sao_Paulo]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-08-05T11:02:19.156837-03:00[America/Sao_Paulo]")
 public class ItemCardapioDto {
 
   private Integer idItemCardapio;
@@ -41,7 +42,7 @@ public class ItemCardapioDto {
   private String fotoPath;
 
   @Valid
-  private List<String> codigoTags = new ArrayList<>();
+  private List<@Valid TagsCardapioDto> tags = new ArrayList<>();
 
   public ItemCardapioDto() {
     super();
@@ -50,13 +51,13 @@ public class ItemCardapioDto {
   /**
    * Constructor with only required parameters
    */
-  public ItemCardapioDto(Integer idItemCardapio, String usuario, String nome, Float preco, Boolean disponivelLocal, List<String> codigoTags) {
+  public ItemCardapioDto(Integer idItemCardapio, String usuario, String nome, Float preco, Boolean disponivelLocal, List<@Valid TagsCardapioDto> tags) {
     this.idItemCardapio = idItemCardapio;
     this.usuario = usuario;
     this.nome = nome;
     this.preco = preco;
     this.disponivelLocal = disponivelLocal;
-    this.codigoTags = codigoTags;
+    this.tags = tags;
   }
 
   public ItemCardapioDto idItemCardapio(Integer idItemCardapio) {
@@ -69,7 +70,7 @@ public class ItemCardapioDto {
    * @return idItemCardapio
   */
   @NotNull 
-  @Schema(name = "idItemCardapio", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "idItemCardapio", example = "101", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("idItemCardapio")
   public Integer getIdItemCardapio() {
     return idItemCardapio;
@@ -89,7 +90,7 @@ public class ItemCardapioDto {
    * @return usuario
   */
   @NotNull 
-  @Schema(name = "usuario", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "usuario", example = "maria.silva", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("usuario")
   public String getUsuario() {
     return usuario;
@@ -109,7 +110,7 @@ public class ItemCardapioDto {
    * @return nome
   */
   @NotNull 
-  @Schema(name = "nome", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "nome", example = "Picanha na Chapa", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("nome")
   public String getNome() {
     return nome;
@@ -129,7 +130,7 @@ public class ItemCardapioDto {
    * @return descricao
   */
   
-  @Schema(name = "descricao", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "descricao", example = "Acompanha arroz, farofa, vinagrete e batata frita", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("descricao")
   public String getDescricao() {
     return descricao;
@@ -149,7 +150,7 @@ public class ItemCardapioDto {
    * @return preco
   */
   @NotNull 
-  @Schema(name = "preco", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "preco", example = "59.9", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("preco")
   public Float getPreco() {
     return preco;
@@ -169,7 +170,7 @@ public class ItemCardapioDto {
    * @return disponivelLocal
   */
   @NotNull 
-  @Schema(name = "disponivelLocal", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "disponivelLocal", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("disponivelLocal")
   public Boolean getDisponivelLocal() {
     return disponivelLocal;
@@ -189,7 +190,7 @@ public class ItemCardapioDto {
    * @return fotoPath
   */
   
-  @Schema(name = "fotoPath", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "fotoPath", example = "/imagens/picanha-chapa.jpg", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("fotoPath")
   public String getFotoPath() {
     return fotoPath;
@@ -199,32 +200,32 @@ public class ItemCardapioDto {
     this.fotoPath = fotoPath;
   }
 
-  public ItemCardapioDto codigoTags(List<String> codigoTags) {
-    this.codigoTags = codigoTags;
+  public ItemCardapioDto tags(List<@Valid TagsCardapioDto> tags) {
+    this.tags = tags;
     return this;
   }
 
-  public ItemCardapioDto addCodigoTagsItem(String codigoTagsItem) {
-    if (this.codigoTags == null) {
-      this.codigoTags = new ArrayList<>();
+  public ItemCardapioDto addTagsItem(TagsCardapioDto tagsItem) {
+    if (this.tags == null) {
+      this.tags = new ArrayList<>();
     }
-    this.codigoTags.add(codigoTagsItem);
+    this.tags.add(tagsItem);
     return this;
   }
 
   /**
-   * Lista de IDs das tags (máximo 5)
-   * @return codigoTags
+   * Get tags
+   * @return tags
   */
-  @NotNull @Size(max = 5) 
-  @Schema(name = "codigoTags", description = "Lista de IDs das tags (máximo 5)", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("codigoTags")
-  public List<String> getCodigoTags() {
-    return codigoTags;
+  @NotNull @Valid @Size(max = 5) 
+  @Schema(name = "tags", requiredMode = Schema.RequiredMode.REQUIRED)
+  @JsonProperty("tags")
+  public List<@Valid TagsCardapioDto> getTags() {
+    return tags;
   }
 
-  public void setCodigoTags(List<String> codigoTags) {
-    this.codigoTags = codigoTags;
+  public void setTags(List<@Valid TagsCardapioDto> tags) {
+    this.tags = tags;
   }
 
   @Override
@@ -243,12 +244,12 @@ public class ItemCardapioDto {
         Objects.equals(this.preco, itemCardapio.preco) &&
         Objects.equals(this.disponivelLocal, itemCardapio.disponivelLocal) &&
         Objects.equals(this.fotoPath, itemCardapio.fotoPath) &&
-        Objects.equals(this.codigoTags, itemCardapio.codigoTags);
+        Objects.equals(this.tags, itemCardapio.tags);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(idItemCardapio, usuario, nome, descricao, preco, disponivelLocal, fotoPath, codigoTags);
+    return Objects.hash(idItemCardapio, usuario, nome, descricao, preco, disponivelLocal, fotoPath, tags);
   }
 
   @Override
@@ -262,7 +263,7 @@ public class ItemCardapioDto {
     sb.append("    preco: ").append(toIndentedString(preco)).append("\n");
     sb.append("    disponivelLocal: ").append(toIndentedString(disponivelLocal)).append("\n");
     sb.append("    fotoPath: ").append(toIndentedString(fotoPath)).append("\n");
-    sb.append("    codigoTags: ").append(toIndentedString(codigoTags)).append("\n");
+    sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
     sb.append("}");
     return sb.toString();
   }
